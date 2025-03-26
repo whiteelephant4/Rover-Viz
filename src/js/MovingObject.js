@@ -1,17 +1,28 @@
+import {
+    Cartesian3,
+    Color,
+    JulianDate,
+    PathGraphics,
+    SampledPositionProperty,
+    TimeInterval,
+    TimeIntervalCollection,
+    VelocityOrientationProperty,
+} from "cesium";
+
 export class MovingObject {
     constructor(viewer, roverPoints, timeStepInSeconds) {
       this.viewer = viewer;
       this.roverPoints = roverPoints;
       this.timeStepInSeconds = timeStepInSeconds;
       this.timeStepInDays = 0.24;
-      this.start = JulianDate.fromIso8601("2024-08-23T12:33:00Z");
+      this.start = JulianDate.fromIso8601("2023-08-23T12:33:00Z");
       this.stop = JulianDate.addDays(
         this.start,
         this.roverPoints.features.length * this.timeStepInDays,
         new JulianDate()
       );
       this._confingTime();
-      this.positionProperty = this._computeTimePositionAdjastment();
+      this.positionProperty = this._computeTimePositionAdjustment();
       
     }
   
@@ -38,7 +49,7 @@ export class MovingObject {
 
     TimeInterval = new TimeInterval()
   
-    _computeTimePositionAdjastment = async () => {
+    _computeTimePositionAdjustment = () => {
         let time;
         const positionProperty = new SampledPositionProperty();
         this.roverPoints.features.forEach((feature, i) => {
@@ -49,8 +60,8 @@ export class MovingObject {
                 new JulianDate()
             )
 
-            const lon = feature.geometry.coordinates[0];
-            const lat = feature.geometry.coordinates[1];
+            let lon = feature.geometry.coordinates[0];
+            let lat = feature.geometry.coordinates[1];
             let alt = 0;
 
             const position = Cartesian3.fromDegrees(lon, lat, alt)
